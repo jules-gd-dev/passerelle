@@ -1,6 +1,6 @@
 {
   "name": "@julesgd/passerelle",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Zero-Knowledge Tunneling & Remote Service Manager Daemon",
   "author": "Jules GD (https://julesgd.dev)",
   "license": "MIT",
