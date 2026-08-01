@@ -1,0 +1,37 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+build/
+*.tsbuildinfo
+
+# Environment & secrets (NEVER commit)
+.env
+.env.*
+!.env.example
+passerelle-config.json
+passerelle-config.*.json
+services.json
+
+# Runtime state
+passerelle-cloud/api/data/
+
+# Logs & packs
+*.log
+*.tgz
+coverage/
+.nyc_output/
+
+# OS / editor
+.DS_Store
+
+# Personal tooling & agent configs (not part of the project)
+.agents/
+.opencode/
+.cursor/
+.windsurf/
+.zcode/
+.clinerules/
+skills-lock.json
+AGENTS.md

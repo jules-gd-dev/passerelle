@@ -1,0 +1,291 @@
+[
+  {
+    "id": "opencode",
+    "name": "OpenCode",
+    "descKey": "catalog.desc.opencode",
+    "recommended": true,
+    "type": "cli",
+    "icon": "https://raw.githubusercontent.com/walkxcode/dashboard-icons/main/png/opencode.png",
+    "command": "opencode",
+    "args": ["serve", "--port", "{{port}}", "--hostname", "127.0.0.1"],
+    "port": 4000,
+    "setupFields": [
+      { "key": "port", "labelKey": "catalog.label_local_port", "type": "number", "default": 4000 }
+    ]
+  },
+  {
+    "id": "kilo",
+    "name": "Kilo Code",
+    "descKey": "catalog.desc.kilo",
+    "recommended": true,
+    "type": "cli",
+    "icon": "https://raw.githubusercontent.com/walkxcode/dashboard-icons/main/png/vscode.png",
+    "command": "kilo",
+    "args": ["serve", "--port", "{{port}}", "--hostname", "127.0.0.1"],
+    "port": 4001,
+    "setupFields": [
+      { "key": "port", "labelKey": "catalog.label_local_port", "type": "number", "default": 4001 }
+    ]
+  },
+  {
+    "id": "ollama",
+    "name": "Ollama",
+    "descKey": "catalog.desc.ollama",
+    "recommended": true,
+    "type": "network",
+    "icon": "https://raw.githubusercontent.com/walkxcode/dashboard-icons/main/png/ollama.png",
+    "target": "http://{{ip}}:{{port}}",
+    "setupFields": [
+      { "key": "ip", "labelKey": "catalog.label_ip", "type": "text", "default": "127.0.0.1" },
+      { "key": "port", "labelKey": "catalog.label_ollama_port", "type": "number", "default": 11434 }
+    ]
+  },
+  {
+    "id": "home-assistant",
+    "name": "Home Assistant",
+    "descKey": "catalog.desc.home_assistant",
+    "recommended": true,
+    "type": "network",
+    "icon": "https://raw.githubusercontent.com/walkxcode/dashboard-icons/main/png/home-assistant.png",
+    "target": "http://{{ip}}:{{port}}",
+    "setupFields": [
+      { "key": "ip", "labelKey": "catalog.label_ip", "type": "text", "default": "192.168.1.50" },
+      { "key": "port", "labelKey": "catalog.label_port", "type": "number", "default": 8123 }
+    ]
+  },
+  {
+    "id": "comfyui",
+    "name": "ComfyUI",
+    "descKey": "catalog.desc.comfyui",
+    "recommended": true,
+    "type": "network",
+    "icon": "https://raw.githubusercontent.com/walkxcode/dashboard-icons/main/png/stable-diffusion.png",
+    "target": "http://{{ip}}:{{port}}",
+    "setupFields": [
+      { "key": "ip", "labelKey": "catalog.label_ip", "type": "text", "default": "127.0.0.1" },
+      { "key": "port", "labelKey": "catalog.label_comfyui_port", "type": "number", "default": 8188 }
+    ]
+  },
+  {
+    "id": "jellyfin",
+    "name": "Jellyfin",
+    "descKey": "catalog.desc.jellyfin",
+    "recommended": false,
+    "type": "network",
+    "icon": "https://raw.githubusercontent.com/walkxcode/dashboard-icons/main/png/jellyfin.png",
+    "target": "http://{{ip}}:{{port}}",
+    "setupFields": [
+      { "key": "ip", "labelKey": "catalog.label_ip", "type": "text", "default": "192.168.1.50" },
+      { "key": "port", "labelKey": "catalog.label_port", "type": "number", "default": 8096 }
+    ]
+  },
+  {
+    "id": "plex",
+    "name": "Plex",
+    "descKey": "catalog.desc.plex",
+    "recommended": false,
+    "type": "network",
+    "icon": "https://raw.githubusercontent.com/walkxcode/dashboard-icons/main/png/plex.png",
+    "target": "http://{{ip}}:{{port}}",
+    "setupFields": [
+      { "key": "ip", "labelKey": "catalog.label_ip", "type": "text", "default": "192.168.1.50" },
+      { "key": "port", "labelKey": "catalog.label_port", "type": "number", "default": 32400 }
+    ]
+  },
+  {
+    "id": "nextcloud",
+    "name": "Nextcloud",
+    "descKey": "catalog.desc.nextcloud",
+    "recommended": false,
+    "type": "network",
+    "icon": "https://raw.githubusercontent.com/walkxcode/dashboard-icons/main/png/nextcloud.png",
+    "target": "http://{{ip}}:{{port}}",
+    "setupFields": [
+      { "key": "ip", "labelKey": "catalog.label_ip", "type": "text", "default": "192.168.1.50" },
+      { "key": "port", "labelKey": "catalog.label_port", "type": "number", "default": 80 }
+    ]
+  },
+  {
+    "id": "vaultwarden",
+    "name": "Vaultwarden",
+    "descKey": "catalog.desc.vaultwarden",
+    "recommended": false,
+    "type": "network",
+    "icon": "https://raw.githubusercontent.com/walkxcode/dashboard-icons/main/png/vaultwarden.png",
+    "target": "http://{{ip}}:{{port}}",
+    "setupFields": [
+      { "key": "ip", "labelKey": "catalog.label_ip", "type": "text", "default": "192.168.1.50" },
+      { "key": "port", "labelKey": "catalog.label_port", "type": "number", "default": 8222 }
+    ]
+  },
+  {
+    "id": "adguard",
+    "name": "AdGuard Home",
+    "descKey": "catalog.desc.adguard",
+    "recommended": false,
+    "type": "network",
+    "icon": "https://raw.githubusercontent.com/walkxcode/dashboard-icons/main/png/adguard-home.png",
+    "target": "http://{{ip}}:{{port}}",
+    "setupFields": [
+      { "key": "ip", "labelKey": "catalog.label_ip", "type": "text", "default": "192.168.1.50" },
+      { "key": "port", "labelKey": "catalog.label_port", "type": "number", "default": 3000 }
+    ]
+  },
+  {
+    "id": "pihole",
+    "name": "Pi-hole",
+    "descKey": "catalog.desc.pihole",
+    "recommended": false,
+    "type": "network",
+    "icon": "https://raw.githubusercontent.com/walkxcode/dashboard-icons/main/png/pi-hole.png",
+    "target": "http://{{ip}}:{{port}}",
+    "setupFields": [
+      { "key": "ip", "labelKey": "catalog.label_ip", "type": "text", "default": "192.168.1.50" },
+      { "key": "port", "labelKey": "catalog.label_port", "type": "number", "default": 80 }
+    ]
+  },
+  {
+    "id": "portainer",
+    "name": "Portainer",
+    "descKey": "catalog.desc.portainer",
+    "recommended": false,
+    "type": "network",
+    "icon": "https://raw.githubusercontent.com/walkxcode/dashboard-icons/main/png/portainer.png",
+    "target": "http://{{ip}}:{{port}}",
+    "setupFields": [
+      { "key": "ip", "labelKey": "catalog.label_ip", "type": "text", "default": "192.168.1.50" },
+      { "key": "port", "labelKey": "catalog.label_port", "type": "number", "default": 9000 }
+    ]
+  },
+  {
+    "id": "grafana",
+    "name": "Grafana",
+    "descKey": "catalog.desc.grafana",
+    "recommended": false,
+    "type": "network",
+    "icon": "https://raw.githubusercontent.com/walkxcode/dashboard-icons/main/png/grafana.png",
+    "target": "http://{{ip}}:{{port}}",
+    "setupFields": [
+      { "key": "ip", "labelKey": "catalog.label_ip", "type": "text", "default": "192.168.1.50" },
+      { "key": "port", "labelKey": "catalog.label_port", "type": "number", "default": 3000 }
+    ]
+  },
+  {
+    "id": "n8n",
+    "name": "n8n",
+    "descKey": "catalog.desc.n8n",
+    "recommended": false,
+    "type": "network",
+    "icon": "https://raw.githubusercontent.com/walkxcode/dashboard-icons/main/png/n8n.png",
+    "target": "http://{{ip}}:{{port}}",
+    "setupFields": [
+      { "key": "ip", "labelKey": "catalog.label_ip", "type": "text", "default": "192.168.1.50" },
+      { "key": "port", "labelKey": "catalog.label_port", "type": "number", "default": 5678 }
+    ]
+  },
+  {
+    "id": "gitea",
+    "name": "Gitea",
+    "descKey": "catalog.desc.gitea",
+    "recommended": false,
+    "type": "network",
+    "icon": "https://raw.githubusercontent.com/walkxcode/dashboard-icons/main/png/gitea.png",
+    "target": "http://{{ip}}:{{port}}",
+    "setupFields": [
+      { "key": "ip", "labelKey": "catalog.label_ip", "type": "text", "default": "192.168.1.50" },
+      { "key": "port", "labelKey": "catalog.label_port", "type": "number", "default": 3000 }
+    ]
+  },
+  {
+    "id": "code-server",
+    "name": "Code Server",
+    "descKey": "catalog.desc.code_server",
+    "recommended": false,
+    "type": "cli",
+    "icon": "https://raw.githubusercontent.com/walkxcode/dashboard-icons/main/png/vscode.png",
+    "command": "code-server",
+    "args": ["--port", "{{port}}", "--bind-addr", "127.0.0.1:{{port}}"],
+    "port": 8080,
+    "setupFields": [
+      { "key": "port", "labelKey": "catalog.label_local_port", "type": "number", "default": 8080 }
+    ]
+  },
+  {
+    "id": "immich",
+    "name": "Immich",
+    "descKey": "catalog.desc.immich",
+    "recommended": false,
+    "type": "network",
+    "icon": "https://raw.githubusercontent.com/walkxcode/dashboard-icons/main/png/immich.png",
+    "target": "http://{{ip}}:{{port}}",
+    "setupFields": [
+      { "key": "ip", "labelKey": "catalog.label_ip", "type": "text", "default": "192.168.1.50" },
+      { "key": "port", "labelKey": "catalog.label_port", "type": "number", "default": 2283 }
+    ]
+  },
+  {
+    "id": "paperless",
+    "name": "Paperless-ngx",
+    "descKey": "catalog.desc.paperless",
+    "recommended": false,
+    "type": "network",
+    "icon": "https://raw.githubusercontent.com/walkxcode/dashboard-icons/main/png/paperless-ngx.png",
+    "target": "http://{{ip}}:{{port}}",
+    "setupFields": [
+      { "key": "ip", "labelKey": "catalog.label_ip", "type": "text", "default": "192.168.1.50" },
+      { "key": "port", "labelKey": "catalog.label_port", "type": "number", "default": 8000 }
+    ]
+  },
+  {
+    "id": "sonarr",
+    "name": "Sonarr",
+    "descKey": "catalog.desc.sonarr",
+    "recommended": false,
+    "type": "network",
+    "icon": "https://raw.githubusercontent.com/walkxcode/dashboard-icons/main/png/sonarr.png",
+    "target": "http://{{ip}}:{{port}}",
+    "setupFields": [
+      { "key": "ip", "labelKey": "catalog.label_ip", "type": "text", "default": "192.168.1.50" },
+      { "key": "port", "labelKey": "catalog.label_port", "type": "number", "default": 8989 }
+    ]
+  },
+  {
+    "id": "radarr",
+    "name": "Radarr",
+    "descKey": "catalog.desc.radarr",
+    "recommended": false,
+    "type": "network",
+    "icon": "https://raw.githubusercontent.com/walkxcode/dashboard-icons/main/png/radarr.png",
+    "target": "http://{{ip}}:{{port}}",
+    "setupFields": [
+      { "key": "ip", "labelKey": "catalog.label_ip", "type": "text", "default": "192.168.1.50" },
+      { "key": "port", "labelKey": "catalog.label_port", "type": "number", "default": 7878 }
+    ]
+  },
+  {
+    "id": "transmission",
+    "name": "Transmission",
+    "descKey": "catalog.desc.transmission",
+    "recommended": false,
+    "type": "network",
+    "icon": "https://raw.githubusercontent.com/walkxcode/dashboard-icons/main/png/transmission.png",
+    "target": "http://{{ip}}:{{port}}",
+    "setupFields": [
+      { "key": "ip", "labelKey": "catalog.label_ip", "type": "text", "default": "192.168.1.50" },
+      { "key": "port", "labelKey": "catalog.label_port", "type": "number", "default": 9091 }
+    ]
+  },
+  {
+    "id": "homebridge",
+    "name": "Homebridge",
+    "descKey": "catalog.desc.homebridge",
+    "recommended": false,
+    "type": "network",
+    "icon": "https://raw.githubusercontent.com/walkxcode/dashboard-icons/main/png/homebridge.png",
+    "target": "http://{{ip}}:{{port}}",
+    "setupFields": [
+      { "key": "ip", "labelKey": "catalog.label_ip", "type": "text", "default": "192.168.1.50" },
+      { "key": "port", "labelKey": "catalog.label_port", "type": "number", "default": 8581 }
+    ]
+  }
+]

@@ -1,0 +1,15 @@
+node_modules/
+dist/
+build/
+.env
+.env.local
+.DS_Store
+*.log
+*.tgz
+coverage/
+.nyc_output/
+
+# Secrets & local runtime state (NEVER commit)
+passerelle-config.json
+services.json
+passerelle-config.*.json

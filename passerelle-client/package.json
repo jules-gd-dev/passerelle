@@ -1,0 +1,62 @@
+{
+  "name": "@julesgd/passerelle",
+  "version": "1.0.1",
+  "description": "Zero-Knowledge Tunneling & Remote Service Manager Daemon",
+  "author": "Jules GD (https://julesgd.dev)",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jules-gd-dev/paserelle-deamon.git"
+  },
+  "keywords": [
+    "tunnel",
+    "daemon",
+    "proxy",
+    "developer-tools",
+    "remote-access",
+    "zero-knowledge"
+  ],
+  "files": [
+    "dist",
+    "README.md",
+    "README_fr.md",
+    "README_zh.md"
+  ],
+  "type": "module",
+  "publishConfig": {
+    "access": "public"
+  },
+  "bin": {
+    "passerelle": "./dist/cli.js",
+    "passerelle-daemon": "./dist/cli.js"
+  },
+  "scripts": {
+    "build": "tsup",
+    "start": "tsx src/cli.ts setup",
+    "start:fg": "tsx src/index.ts",
+    "start:debug": "tsx src/index.ts --debug",
+    "dev": "tsx watch src/index.ts"
+  },
+  "dependencies": {
+    "@hono/node-server": "^2.0.12",
+    "clipboardy": "^5.3.2",
+    "cloudflared": "^0.7.1",
+    "hono": "^4.6.14",
+    "http-proxy": "^1.18.1",
+    "pm2": "^7.0.3",
+    "qrcode-terminal": "^0.12.0",
+    "tsx": "^4.19.2",
+    "ws": "^8.18.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/http-proxy": "^1.17.15",
+    "@types/node": "^20.17.9",
+    "@types/qrcode-terminal": "^0.12.2",
+    "@types/ws": "^8.5.13",
+    "eslint": "^10.8.0",
+    "tsup": "^8.5.1",
+    "typescript": "^5.7.2",
+    "typescript-eslint": "^8.65.0"
+  }
+}

@@ -1,0 +1,64 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  client:
+    name: Client (daemon)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: passerelle-client
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+          cache-dependency-path: passerelle-client/package-lock.json
+      - run: npm ci
+      - run: npx eslint .
+      - run: npm run build
+
+  api:
+    name: Gateway API
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: passerelle-cloud/api
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+          cache-dependency-path: passerelle-cloud/api/package-lock.json
+      - run: npm ci
+      - run: npx eslint .
+      - run: npx tsc --noEmit
+      - run: npm test
+
+  web:
+    name: Web PWA
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: passerelle-cloud/web
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+          cache-dependency-path: passerelle-cloud/web/package-lock.json
+      - run: npm ci
+      - run: npx eslint .
+      - run: npm test
+      - run: npm run build

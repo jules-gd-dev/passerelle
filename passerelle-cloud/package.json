@@ -1,0 +1,16 @@
+{
+  "name": "passerelle",
+  "private": true,
+  "workspaces": ["api", "web"],
+  "scripts": {
+    "dev": "npm run dev --workspaces --if-present",
+    "build": "npm run build --workspaces --if-present",
+    "test": "vitest run",
+    "lint": "biome check .",
+    "format": "biome format --write ."
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^1.9.4",
+    "vitest": "^2.1.8"
+  }
+}

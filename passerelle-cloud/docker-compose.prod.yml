@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    # Defense-in-depth: drop all Linux capabilities, forbid privilege escalation.
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    # C2 handshake: the gateway persists machineId<->secret bindings here.
+    # This volume MUST be kept across deploys, otherwise every daemon would be
+    # re-challenged (and any known machineId could be reclaimed during the
+    # reconnect window).
+    volumes:
+      - passerelle-data:/app/api/data
+    environment:
+      - TUNNEL_HOSTNAME=${TUNNEL_HOSTNAME:?TUNNEL_HOSTNAME must be set. See .env.example}
+      - ALLOWED_TUNNEL_HOSTS=${ALLOWED_TUNNEL_HOSTS:-}
+      - MACHINES_DB_PATH=${MACHINES_DB_PATH:-/app/api/data/machines.json}
+      - SESSION_COOKIE_KEY=${SESSION_COOKIE_KEY:?SESSION_COOKIE_KEY must be set (32 bytes hex). See .env.example}
+      - VERSION_MIN_REQUIRED=${VERSION_MIN_REQUIRED:-0.0.0}
+      - VERSION_MIN_RECOMMENDED=${VERSION_MIN_RECOMMENDED:-0.0.0}
+      - VERSION_STARTUP_ANNOUNCEMENT=${VERSION_STARTUP_ANNOUNCEMENT:-}
+
+  tunnel:
+    image: cloudflare/cloudflared:latest
+    restart: unless-stopped
+    command: tunnel --no-autoupdate run
+    env_file:
+      - .env
+    environment:
+      - TUNNEL_UUID=${TUNNEL_UUID:?TUNNEL_UUID must be set. See .env.example}
+      - TUNNEL_HOSTNAME=${TUNNEL_HOSTNAME:?TUNNEL_HOSTNAME must be set. See .env.example}
+    volumes:
+      - ${TUNNEL_CREDENTIALS_PATH:?TUNNEL_CREDENTIALS_PATH must be set. See .env.example}:/etc/cloudflared/${TUNNEL_UUID:?TUNNEL_UUID must be set}.json:ro
+      - ./cloudflared/config.tunnel.yml:/etc/cloudflared/config.yml:ro
+    depends_on:
+      - app
+
+volumes:
+  passerelle-data:
