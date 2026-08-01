@@ -36,7 +36,7 @@ export function setupApiRoutes(app: Hono) {
       credits: {
         project_name: 'Passerelle',
         author: 'Jules GD (julesgd.dev)',
-        github: 'https://github.com/jules-gd-dev/paserelle',
+        github: 'https://github.com/jules-gd-dev/passerelle',
         donations: 'https://github.com/sponsors/jules-gd-dev',
         message:
           'Thank you for supporting Passerelle! Note: The backend Gateway server will soon be open-sourced as well!',

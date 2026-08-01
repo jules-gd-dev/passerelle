@@ -120,4 +120,4 @@ The same value can be set directly in `passerelle-config.json` as `"commandAllow
 ---
 
 ## Project Credits & Acknowledgments
-* **Author**: Jules GD (julesgd.dev) | **GitHub**: [jules-gd-dev/paserelle](https://github.com/jules-gd-dev/paserelle) | **Sponsors**: [Support on GitHub](https://github.com/sponsors/jules-gd-dev) | **License**: MIT
+* **Author**: Jules GD (julesgd.dev) | **GitHub**: [jules-gd-dev/passerelle](https://github.com/jules-gd-dev/passerelle) | **Sponsors**: [Support on GitHub](https://github.com/sponsors/jules-gd-dev) | **License**: MIT
