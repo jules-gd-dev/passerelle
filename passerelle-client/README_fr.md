@@ -84,4 +84,4 @@ Une fois attaché au terminal, vous pouvez exécuter des actions instantanées v
 ---
 
 ## Crédits du Projet & Remerciements
-* **Auteur** : Jules GD (julesgd.dev) | **GitHub** : [jules-gd-dev/paserelle-deamon](https://github.com/jules-gd-dev/paserelle-deamon) | **Sponsors** : [Soutenir sur GitHub](https://github.com/sponsors/jules-gd-dev) | **Licence** : MIT
+* **Auteur** : Jules GD (julesgd.dev) | **GitHub** : [jules-gd-dev/paserelle](https://github.com/jules-gd-dev/paserelle) | **Sponsors** : [Soutenir sur GitHub](https://github.com/sponsors/jules-gd-dev) | **Licence** : MIT

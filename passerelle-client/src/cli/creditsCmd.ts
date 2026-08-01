@@ -38,7 +38,7 @@ export async function handleCreditsCommands(cmd: string): Promise<boolean> {
     console.log('\n=== PASSERELLE PROJECT CREDITS ===\n');
     console.log(`* Project Name (project_name)     : ${info.project_name || 'Passerelle'}`);
     console.log(`* Author / Creator (author)       : ${info.author || 'Jules GD (julesgd.dev)'}`);
-    console.log(`* GitHub Repository (github)      : ${info.github || 'https://github.com/jules-gd-dev/paserelle-deamon'}`);
+    console.log(`* GitHub Repository (github)      : ${info.github || 'https://github.com/jules-gd-dev/paserelle'}`);
     console.log(`* Donations / Sponsors (donations): ${info.donations || 'https://github.com/sponsors/julesgd'}`);
     if (info.message) console.log(`* Message (message)               : ${info.message}`);
     console.log('\n-> Thank you for supporting Passerelle!\n');

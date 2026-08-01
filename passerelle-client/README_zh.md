@@ -84,4 +84,4 @@ passerelle ui
 ---
 
 ## 致嘉颂诚铭志本记与共策资援扶安渠道大关
-* **神武总师创始督统大员**：Jules GD (julesgd.dev) | **开源归源流泉神地 (GitHub)**：[jules-gd-dev/paserelle-deamon](https://github.com/jules-gd-dev/paserelle-deamon) | **善举赏德注恩充能直供大渠 (Sponsors)**：[赴望 GitHub 上广济慷慨助威功大行无穷](https://github.com/sponsors/jules-gd-dev) | **至平无上仁厚坦成开朗奉授律纪章款**：崇凛循遵 **MIT License** 高德天下大通仁善长规向人人尽撒博享福祉
+* **神武总师创始督统大员**：Jules GD (julesgd.dev) | **开源归源流泉神地 (GitHub)**：[jules-gd-dev/paserelle](https://github.com/jules-gd-dev/paserelle) | **善举赏德注恩充能直供大渠 (Sponsors)**：[赴望 GitHub 上广济慷慨助威功大行无穷](https://github.com/sponsors/jules-gd-dev) | **至平无上仁厚坦成开朗奉授律纪章款**：崇凛循遵 **MIT License** 高德天下大通仁善长规向人人尽撒博享福祉

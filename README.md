@@ -59,4 +59,4 @@ See the inline `H1`–`H6` / `C2` comments in the source for the rationale behin
 
 ## Credits
 
-**Author**: Jules GD ([julesgd.dev](https://www.julesgd.dev)) · **GitHub**: [jules-gd-dev/paserelle-deamon](https://github.com/jules-gd-dev/paserelle-deamon) · **Sponsors**: [GitHub Sponsors](https://github.com/sponsors/jules-gd-dev) · **License**: MIT
+**Author**: Jules GD ([julesgd.dev](https://www.julesgd.dev)) · **GitHub**: [jules-gd-dev/paserelle](https://github.com/jules-gd-dev/paserelle) · **Sponsors**: [GitHub Sponsors](https://github.com/sponsors/jules-gd-dev) · **License**: MIT
