@@ -60,7 +60,7 @@ export default function App() {
 
   const perfStats = useSystemStats(currentSession);
   const versionAlert = useVersionAlert(currentSession);
-  const currentServices = currentSession ? (machineServices[currentSession.machineId] || []) : [];
+  const currentServices = currentSession ? machineServices[currentSession.machineId] : undefined;
   const availableMachines = machinesList.filter((m) => !sessions[m.id]);
 
   return (

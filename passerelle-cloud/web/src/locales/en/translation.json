@@ -40,6 +40,7 @@
   },
   "services": {
     "title": "Services Installed on this PC",
+    "empty": "No service configured",
     "add_new": "New Service",
     "store_title": "App Store",
     "custom": "Custom Service",
