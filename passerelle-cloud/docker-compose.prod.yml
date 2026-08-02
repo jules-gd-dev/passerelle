@@ -29,7 +29,7 @@ services:
   tunnel:
     image: cloudflare/cloudflared:latest
     restart: unless-stopped
-    command: tunnel --no-autoupdate run
+    command: tunnel --no-autoupdate run --url http://app:8787
     env_file:
       - .env
     environment:
@@ -37,7 +37,6 @@ services:
       - TUNNEL_HOSTNAME=${TUNNEL_HOSTNAME:?TUNNEL_HOSTNAME must be set. See .env.example}
     volumes:
       - ${TUNNEL_CREDENTIALS_PATH:?TUNNEL_CREDENTIALS_PATH must be set. See .env.example}:/etc/cloudflared/${TUNNEL_UUID:?TUNNEL_UUID must be set}.json:ro
-      - ./cloudflared/config.tunnel.yml:/etc/cloudflared/config.yml:ro
     depends_on:
       - app
 
