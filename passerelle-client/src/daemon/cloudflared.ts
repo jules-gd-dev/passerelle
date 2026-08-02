@@ -8,47 +8,74 @@ import { logInline } from '../utils/term.js';
 // The cloudflared binary ships as an npm dependency (`cloudflared` package): it
 // is downloaded on first use, so users do NOT need to install cloudflared on
 // their system. The binary lives in the package's own bin/ dir.
-export async function startCloudflared(runtime: DaemonRuntime, activePort: number, onUrlFound: (url: string) => void) {
-  logInline('(3/4)', 'Resolving Cloudflared binary...');
-  let binPath: string;
-  try {
-    if (!fs.existsSync(bin)) {
-      logInline('(3/4)', 'Downloading Cloudflare tunnel binary (first run)...');
-      await install(bin);
-    }
-    binPath = bin;
-  } catch (err) {
-    console.error('[cloudflared] Failed to obtain the tunnel binary:', err);
-    console.error('[cloudflared] Install it manually with: npm i -g cloudflared');
-    return;
+export class TunnelManager {
+  private runtime: DaemonRuntime;
+  private binPath: string | null = null;
+  private tunnels = new Map<string, { process: ChildProcess, url: string | null }>();
+
+  constructor(runtime: DaemonRuntime) {
+    this.runtime = runtime;
   }
 
-  logInline('(3/4)', 'Establishing Cloudflare Quick Tunnel...');
-  const args = ['tunnel', '--config', '/dev/null', '--url', `http://127.0.0.1:${activePort}`];
-  if (isDebug) args.push('--loglevel', 'debug');
-
-  runtime.cloudflaredProcess = spawn(binPath, args);
-
-  let tunnelUrl: string | null = null;
-  const cloudflareRegex = /https:\/\/[a-zA-Z0-9-]+\.trycloudflare\.com/;
-
-  function handleOutput(data: Buffer) {
-    const output = data.toString();
-    if (isDebug) process.stdout.write(`[cloudflared log] ${output}`);
-    if (!tunnelUrl) {
-      const match = output.match(cloudflareRegex);
-      if (match) {
-        tunnelUrl = match[0];
-        runtime.tunnelUrlStored = tunnelUrl;
-        logInline('(3/4)', `Establishing Cloudflare Quick Tunnel... Done (${tunnelUrl})`);
-        onUrlFound(tunnelUrl);
+  async init() {
+    logInline('(3/4)', 'Resolving Cloudflared binary...');
+    try {
+      if (!fs.existsSync(bin)) {
+        logInline('(3/4)', 'Downloading Cloudflare tunnel binary (first run)...');
+        await install(bin);
       }
+      this.binPath = bin;
+    } catch (err) {
+      console.error('[cloudflared] Failed to obtain the tunnel binary:', err);
+      console.error('[cloudflared] Install it manually with: npm i -g cloudflared');
     }
   }
 
-  runtime.cloudflaredProcess.stdout?.on('data', handleOutput);
-  runtime.cloudflaredProcess.stderr?.on('data', handleOutput);
-  runtime.cloudflaredProcess.on('error', (err) => {
-    console.error('[cloudflared] Process error:', err);
-  });
+  async startTunnel(tunnelId: string, targetPort: number, onUrlFound: (url: string) => void): Promise<void> {
+    if (!this.binPath) return;
+    if (this.tunnels.has(tunnelId)) this.stopTunnel(tunnelId);
+
+    const args = ['tunnel', '--config', '/dev/null', '--url', `http://127.0.0.1:${targetPort}`];
+    if (isDebug) args.push('--loglevel', 'debug');
+
+    const cp = spawn(this.binPath, args);
+    const tunnelState = { process: cp, url: null as string | null };
+    this.tunnels.set(tunnelId, tunnelState);
+
+    const cloudflareRegex = /https:\/\/[a-zA-Z0-9-]+\.trycloudflare\.com/;
+
+    const handleOutput = (data: Buffer) => {
+      const output = data.toString();
+      if (isDebug) process.stdout.write(`[cloudflared log ${tunnelId}] ${output}`);
+      if (!tunnelState.url) {
+        const match = output.match(cloudflareRegex);
+        if (match) {
+          tunnelState.url = match[0];
+          onUrlFound(tunnelState.url);
+        }
+      }
+    };
+
+    cp.stdout?.on('data', handleOutput);
+    cp.stderr?.on('data', handleOutput);
+    cp.on('error', (err) => {
+      console.error(`[cloudflared ${tunnelId}] Process error:`, err);
+    });
+  }
+
+  stopTunnel(tunnelId: string) {
+    const t = this.tunnels.get(tunnelId);
+    if (t) {
+      t.process.kill();
+      this.tunnels.delete(tunnelId);
+    }
+  }
+
+  stopAll() {
+    for (const [id, t] of this.tunnels.entries()) {
+      t.process.kill();
+    }
+    this.tunnels.clear();
+  }
 }
+

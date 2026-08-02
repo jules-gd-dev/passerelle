@@ -147,7 +147,14 @@ export function setupApiRoutes(app: Hono) {
       return c.json({ error: 'Machine offline' }, 503);
     const code = stageHandoff(machine.ws, token);
     if (!code) return c.json({ error: 'Machine offline' }, 503);
-    const url = new URL(machine.tunnelUrl);
+    
+    let targetTunnelUrl = machine.tunnelUrl;
+    if (machine.services) {
+      const service = machine.services.find(s => s.id === serviceId);
+      if (service && (service as any).tunnelUrl) targetTunnelUrl = (service as any).tunnelUrl;
+    }
+
+    const url = new URL(targetTunnelUrl);
     url.searchParams.set('code', code);
     url.searchParams.set('service', serviceId);
     return c.redirect(url.toString());

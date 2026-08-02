@@ -9,6 +9,7 @@ export interface ServiceItem {
   ports?: number[]; // Multi-ports
   target?: string;
   status: 'running' | 'stopped';
+  tunnelUrl?: string;
 }
 
 export interface MachineItem {
