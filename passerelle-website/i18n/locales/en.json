@@ -1,0 +1,70 @@
+{
+  "nav": {
+    "docs": "Docs",
+    "github": "GitHub",
+    "features": "Features",
+    "support": "Support",
+    "contact": "Contact"
+  },
+  "lang": { "label": "Language" },
+  "hero": {
+    "title": "Zero-Knowledge Local Tunneling",
+    "tagline": "Passerelle exposes your local services through ephemeral Cloudflare tunnels. Fast, secure, and orchestrated by a gateway you control.",
+    "learn_more": "Learn more",
+    "source": "Source"
+  },
+  "capabilities": {
+    "title": "Capabilities",
+    "items": [
+      {
+        "meta": "Core",
+        "title": "Cloudflare Tunneling",
+        "desc": "Expose local services globally without compromising your network. Built securely on proven Cloudflare tunnels."
+      },
+      {
+        "meta": "Security",
+        "title": "Zero-Knowledge",
+        "desc": "The gateway cannot interfere with your personal instance, because the instance itself verifies all access requests."
+      },
+      {
+        "meta": "Deployment",
+        "title": "Self-Hosted",
+        "desc": "Run the gateway yourself. Orchestrate your ephemeral tunnels directly on your own infrastructure."
+      }
+    ]
+  },
+  "features_ext": {
+    "title": "Features",
+    "tagline": "Everything you need to orchestrate local tunnels securely.",
+    "items": [
+      { "title": "Direct Link Access", "desc": "Instant, secure URL access to your exposed local ports." },
+      { "title": "PWA Dashboard", "desc": "Manage and orchestrate all your active tunnels through a beautiful web UI." },
+      { "title": "Zero Tunnel Management", "desc": "Ephemeral lifecycles handled automatically by the daemon." },
+      { "title": "One-Time QR Access", "desc": "Handoff authorization between devices via single-use QR codes." },
+      { "title": "5-Minute Setup", "desc": "Frictionless deployment. Get your first tunnel running in under 5 minutes." },
+      { "title": "LAN Wide Exposure", "desc": "Proxy any device or service on your local network, not just localhost." },
+      { "title": "End-to-End Security", "desc": "Zero-trust architecture ensuring all data streams remain encrypted." },
+      { "title": "No Registration", "desc": "Anonymous usage out of the box with zero signups or accounts required." },
+      { "title": "Self-Host Gateway", "desc": "Decentralized by design. Point the daemon to your own self-hosted gateway anytime." }
+    ]
+  },
+  "support": {
+    "title": "Support",
+    "mission": "We believe in privacy by design. The public Passerelle gateway does not collect, harvest, or sell any user data. However, maintaining reliable global infrastructure requires resources.",
+    "donations": "Donations are highly appreciated to keep the public gateway fast and free.",
+    "disabled": "Donations are temporarily disabled. You can still reach out to help or sponsor the project via email.",
+    "contact": "Contact"
+  },
+  "copy": { "copy": "Copy", "copied": "Copied" },
+  "claims": ["100% free", "100% private", "100% open source"],
+  "docs": {
+    "sidebar_label": "Documentation",
+    "not_found": "This page does not exist yet in your language.",
+    "introduction": "Introduction",
+    "install": "Install",
+    "cli": "CLI Reference",
+    "security": "Security Model",
+    "self_host": "Self-host",
+    "contribution": "Contributing"
+  }
+}

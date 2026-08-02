@@ -1,0 +1,33 @@
+# Passerelle (Full Context)
+
+Passerelle is a secure tunneling tool that enables developers to expose local services globally without compromising their network.
+
+## Commands
+
+- `passerelle setup`: Register daemon and start under PM2.
+- `passerelle link`: Show one-time link to validate machine.
+- `passerelle status`: Show daemon status and tunnel URL.
+- `passerelle ui`: Attach UI to running daemon.
+- `passerelle version`: Show version and commit.
+- `passerelle config`: Edit persistent config.
+- `passerelle restart`: Restart daemon via PM2.
+- `passerelle register`: Re-declare daemon presence directly to the Gateway.
+
+## Interactive UI Keyboard Shortcuts
+
+When running `passerelle ui`, you can use the following shortcuts:
+- `[r]` Renew PIN
+- `[s]` Copy Link
+- `[c]` / `[l]` View Status & Services
+- `[h]` Privacy Mode (hides PIN and QR code)
+- `[k]` Kill Sessions (revokes all active web sessions)
+- `[p]` Re-register
+- `[d]` Detach
+
+## Configuration
+
+Settings live in `~/.config/passerelle/passerelle-config.json`.
+You can configure a `command_allowlist` to restrict which local CLI commands the web dashboard is allowed to start on your machine:
+`passerelle config command_allowlist "opencode,kilo,pm2"`
+
+For full documentation, visit the website or refer to the CLI Reference.

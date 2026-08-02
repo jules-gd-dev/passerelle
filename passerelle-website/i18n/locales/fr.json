@@ -1,0 +1,70 @@
+{
+  "nav": {
+    "docs": "Documentation",
+    "github": "GitHub",
+    "features": "Fonctionnalités",
+    "support": "Support",
+    "contact": "Contact"
+  },
+  "lang": { "label": "Langue" },
+  "hero": {
+    "title": "Tunnels Locaux Zero-Knowledge",
+    "tagline": "Passerelle expose vos services locaux via des tunnels Cloudflare éphémères. Rapide, sécurisé, et orchestré par une passerelle que vous contrôlez.",
+    "learn_more": "En savoir plus",
+    "source": "Source"
+  },
+  "capabilities": {
+    "title": "Capacités",
+    "items": [
+      {
+        "meta": "Cœur",
+        "title": "Tunnels Cloudflare",
+        "desc": "Exposez vos services locaux mondialement sans compromettre votre réseau. Construit de manière sécurisée sur les tunnels Cloudflare."
+      },
+      {
+        "meta": "Sécurité",
+        "title": "Zero-Knowledge",
+        "desc": "La passerelle ne peut pas interférer avec votre instance personnelle, car c'est l'instance elle-même qui vérifie toutes les requêtes d'accès."
+      },
+      {
+        "meta": "Déploiement",
+        "title": "Auto-Hébergement",
+        "desc": "Hébergez la passerelle vous-même. Orchestrez vos tunnels éphémères directement sur votre propre infrastructure."
+      }
+    ]
+  },
+  "features_ext": {
+    "title": "Fonctionnalités",
+    "tagline": "Tout ce dont vous avez besoin pour orchestrer vos tunnels locaux en toute sécurité.",
+    "items": [
+      { "title": "Accès Direct", "desc": "Accès URL instantané et sécurisé vers vos ports locaux." },
+      { "title": "Dashboard PWA", "desc": "Gérez et orchestrez vos tunnels actifs via une interface élégante." },
+      { "title": "Zéro Gestion de Tunnel", "desc": "Le cycle de vie éphémère est géré automatiquement par le daemon." },
+      { "title": "QR Code à Usage Unique", "desc": "Autorisez l'accès entre appareils via des QR codes uniques (Handoff)." },
+      { "title": "Setup en 5 Minutes", "desc": "Déploiement sans friction. Votre premier tunnel est actif en moins de 5 minutes." },
+      { "title": "Exposition Réseau LAN", "desc": "Proxysez n'importe quel appareil sur votre réseau local, pas seulement localhost." },
+      { "title": "Sécurité de Bout en Bout", "desc": "Architecture zero-trust garantissant le chiffrement total des flux." },
+      { "title": "Aucune Inscription", "desc": "Utilisation anonyme immédiate, sans aucun compte requis." },
+      { "title": "Self-Host Gateway", "desc": "Décentralisé par conception. Connectez votre daemon à votre propre passerelle à tout moment." }
+    ]
+  },
+  "support": {
+    "title": "Support & Dons",
+    "mission": "Nous croyons au respect de la vie privée dès la conception. La passerelle publique ne collecte ni ne revend aucune donnée utilisateur. Cependant, maintenir une infrastructure fiable coûte cher.",
+    "donations": "Les dons sont grandement appréciés pour garder ce service public rapide et gratuit.",
+    "disabled": "Les dons sont désactivés pour le moment. Vous pouvez toujours nous contacter par mail pour aider ou sponsoriser le projet.",
+    "contact": "Contact"
+  },
+  "copy": { "copy": "Copier", "copied": "Copié" },
+  "claims": ["100% gratuit", "100% privé", "100% open source"],
+  "docs": {
+    "sidebar_label": "Documentation",
+    "not_found": "Cette page n'existe pas encore dans votre langue.",
+    "introduction": "Introduction",
+    "install": "Installation",
+    "cli": "Référence CLI",
+    "security": "Modèle de Sécurité",
+    "self_host": "Auto-hébergement",
+    "contribution": "Contribuer"
+  }
+}

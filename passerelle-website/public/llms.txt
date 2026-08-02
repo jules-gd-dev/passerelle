@@ -1,0 +1,26 @@
+# Passerelle
+
+> Expose any local service, securely, in under 3 minutes.
+
+Passerelle is an open-source tunneling and local service discovery daemon designed for developers. It uses Cloudflare Tunnels under the hood but manages them dynamically, providing a Zero-Knowledge local gateway to authenticate requests.
+
+## Architecture
+
+- **Daemon (`passerelle-client`)**: Runs locally via PM2. Generates a local identity and verifies all incoming requests.
+- **Gateway (`passerelle-cloud`)**: Cloudflare Worker that proxies traffic. It does NOT store passwords or verify credentials; it simply forwards WebSocket traffic to your daemon.
+- **Web UI (`passerelle-website`)**: The interactive dashboard to manage your active tunnels.
+
+## Quick Start
+
+```bash
+npm install -g @julesgd/passerelle
+passerelle setup
+passerelle ui
+```
+
+## Security Model
+
+The Gateway acts solely as an untrusted WebSocket relay. If an incoming connection presents an invalid PIN, the local daemon rejects it instantly. Treat any valid session token as full control of those configured services.
+
+## Docs
+See `/docs` on the website for the CLI Reference and complete documentation.
