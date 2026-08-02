@@ -29,7 +29,7 @@ services:
   tunnel:
     image: cloudflare/cloudflared:latest
     restart: unless-stopped
-    command: tunnel --no-autoupdate run --url http://app:8787
+    command: tunnel --no-autoupdate run --url http://app:8787 ${TUNNEL_UUID:?TUNNEL_UUID must be set}
     env_file:
       - .env
     environment:
