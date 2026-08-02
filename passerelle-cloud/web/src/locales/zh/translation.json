@@ -40,6 +40,7 @@
   },
   "services": {
     "title": "此电脑上已安装的服务",
+    "empty": "未配置任何服务",
     "add_new": "新建服务",
     "store_title": "应用商店",
     "custom": "自定义服务",
