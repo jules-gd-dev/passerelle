@@ -5,6 +5,7 @@ export interface Machine {
   ws: WebSocket;
   tunnelUrl: string;
   lastSeen: number;
+  services?: any[];
 }
 
 export const machines = new Map<string, Machine>();

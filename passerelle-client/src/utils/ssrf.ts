@@ -13,21 +13,15 @@ const BLOCKED_HOSTNAMES = new Set([
 function isPrivateIp(ip: string): boolean {
   if (net.isIPv4(ip)) {
     const [a, b] = ip.split('.').map(Number);
-    if (a === 10) return true;
-    if (a === 172 && b >= 16 && b <= 31) return true;
-    if (a === 192 && b === 168) return true;
-    if (a === 127) return true; // loopback
     if (a === 0) return true; // current network
     if (a === 169 && b === 254) return true; // link-local (incl. cloud metadata range)
     if (a >= 224) return true; // multicast / reserved
-    return false;
+    return false; // LAN and Loopback are ALLOWED for proxying local services
   }
   if (net.isIPv6(ip)) {
     const lower = ip.toLowerCase();
-    if (lower === '::1' || lower === '::') return true; // loopback / unspecified
-    if (lower.startsWith('fc') || lower.startsWith('fd')) return true; // unique local
     if (lower.startsWith('fe80')) return true; // link-local
-    return false;
+    return false; // LAN and loopback allowed
   }
   return true;
 }

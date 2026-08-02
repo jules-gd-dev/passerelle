@@ -7,6 +7,8 @@ services:
     working_dir: /app/api
     volumes:
       - ./api:/app/api
+    environment:
+      - SESSION_COOKIE_KEY=782799006d94fac472660d1360688080d6bd761703ce9bf5be5b33cfb2578349
     command: sh -c "npm install && npx tsx watch src/index.ts"
 
   web:
@@ -20,7 +22,7 @@ services:
   tunnel:
     image: cloudflare/cloudflared:latest
     restart: unless-stopped
-    command: tunnel --no-autoupdate run
+    command: tunnel --no-autoupdate run --url http://web:5173 ${TUNNEL_UUID:?TUNNEL_UUID must be set}
     env_file:
       - .env
     environment:
@@ -28,7 +30,6 @@ services:
       - TUNNEL_HOSTNAME=${TUNNEL_HOSTNAME:?TUNNEL_HOSTNAME must be set. See .env.example}
     volumes:
       - ${TUNNEL_CREDENTIALS_PATH:?TUNNEL_CREDENTIALS_PATH must be set. See .env.example}:/etc/cloudflared/${TUNNEL_UUID:?TUNNEL_UUID must be set}.json:ro
-      - ./cloudflared/config.yml:/etc/cloudflared/config.yml:ro
     depends_on:
       - api
       - web

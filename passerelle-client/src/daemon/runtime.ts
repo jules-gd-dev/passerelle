@@ -5,6 +5,7 @@ import type WebSocket from 'ws';
 import type { ChildProcess } from 'node:child_process';
 import { services } from '../services/storage.js';
 import { GATEWAY_WEB_URL, daemonConfig } from '../utils/config.js';
+import { TunnelManager } from './cloudflared.js';
 
 export function generatePin(): string {
   // H5: CSPRNG PIN instead of Math.random().
@@ -35,7 +36,7 @@ export class DaemonRuntime {
   lastKeyHandledAt = 0;
 
   ws: WebSocket | null = null;
-  cloudflaredProcess: ChildProcess | null = null;
+  tunnelManager = new TunnelManager(this);
   heartBeatTimer: NodeJS.Timeout | null = null;
   countdownTimer: NodeJS.Timeout | null = null;
   reconnectTimer: NodeJS.Timeout | null = null;

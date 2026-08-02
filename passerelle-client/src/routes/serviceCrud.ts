@@ -23,7 +23,10 @@ function normalizePorts(value: unknown): number[] | undefined {
   });
 }
 
-export function setupServiceCrudRoutes(app: Hono, onAction: (msg: string) => void) {
+import type { DaemonRuntime } from '../daemon/runtime.js';
+
+export function setupServiceCrudRoutes(app: Hono, runtime: DaemonRuntime, sendRegistration: () => void) {
+  const onAction = (msg: string) => runtime.setActionMessage(msg);
   app.get('/api/services', (c) => {
     const list = Array.from(services.values()).map(({ process: _p, ...rest }) => rest);
     return c.json(list);
@@ -79,6 +82,14 @@ export function setupServiceCrudRoutes(app: Hono, onAction: (msg: string) => voi
 
     services.set(newId, service);
     saveServicesToFile(services);
+    
+    if (serviceType === 'network') {
+      void runtime.tunnelManager.startTunnel(newId, runtime.port, (url) => {
+        (service as any).tunnelUrl = url;
+        sendRegistration();
+      });
+    }
+
     onAction(`[ADD] Added service ${name}`);
     const { process: _p, ...resData } = service;
     return c.json(resData, 201);
@@ -108,7 +119,13 @@ export function setupServiceCrudRoutes(app: Hono, onAction: (msg: string) => voi
       try { await assertSafeNetworkTarget(targetService.target); }
       catch (e: any) { return c.json({ error: e.message || 'Invalid target' }, 400); }
     }
-    if (targetService.type === 'network') targetService.status = 'running';
+    if (targetService.type === 'network') {
+      targetService.status = 'running';
+      void runtime.tunnelManager.startTunnel(id, runtime.port, (url) => {
+        (targetService as any).tunnelUrl = url;
+        sendRegistration();
+      });
+    }
 
     saveServicesToFile(services);
     onAction(`[EDIT] Updated service ${targetService.name}`);
@@ -121,9 +138,11 @@ export function setupServiceCrudRoutes(app: Hono, onAction: (msg: string) => voi
     const targetService = services.get(id);
     if (!targetService) return c.json({ error: 'Service not found' }, 404);
     if (targetService.process) { try { targetService.process.kill(); } catch (_e) {} }
+    runtime.tunnelManager.stopTunnel(id);
     services.delete(id);
     logBuffers.delete(id);
     saveServicesToFile(services);
+    sendRegistration();
     onAction(`[DEL] Removed service ${targetService.name}`);
     return c.json({ success: true, message: 'Service removed' });
   });

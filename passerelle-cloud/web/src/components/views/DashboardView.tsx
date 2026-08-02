@@ -43,11 +43,27 @@ export function ServiceCard({ service, currentSession, isBusy, onStart, onStop, 
           </button>
         ) : (
           <>
-            <a href={openUrl} target="_blank" rel="noopener noreferrer" className="btn-primary">
-              <span>{t('service.open')}</span><IconExternalLink width={13} height={13} />
+            <a 
+              href={service.tunnelUrl ? openUrl : '#'} 
+              target={service.tunnelUrl ? "_blank" : undefined}
+              rel={service.tunnelUrl ? "noopener noreferrer" : undefined}
+              className={`btn-primary ${!service.tunnelUrl ? 'disabled' : ''}`}
+              style={!service.tunnelUrl ? { pointerEvents: 'none', opacity: 0.6 } : {}}
+            >
+              {!service.tunnelUrl ? (
+                <>
+                  <span>{t('service.starting') || 'Chargement...'}</span>
+                  <IconLoader width={13} height={13} className="spin" />
+                </>
+              ) : (
+                <>
+                  <span>{t('service.open')}</span>
+                  <IconExternalLink width={13} height={13} />
+                </>
+              )}
             </a>
             {!isNetwork && (
-              <button type="button" className="btn-secondary" onClick={() => onStop(service.id)} disabled={isBusy}>
+              <button type="button" className="btn-secondary" onClick={() => onStop(service.id)} disabled={isBusy || !service.tunnelUrl}>
                 {isBusy ? <IconLoader width={13} height={13} className="spin" /> : <IconClose width={13} height={13} />}
                 <span>{isBusy ? t('service.stop_action') : t('service.stop')}</span>
               </button>

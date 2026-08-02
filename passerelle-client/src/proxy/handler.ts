@@ -7,6 +7,8 @@ import { verifyJWT } from '../utils/jwt.js';
 import { assertSafeNetworkTarget } from '../utils/ssrf.js';
 import { getNoServiceHtml, getErrorPageHtml } from './pages.js';
 
+import { getCookie, setCookie } from 'hono/cookie';
+
 export function createServiceProxy(app: Hono) {
   const proxy = httpProxy.createProxyServer({ changeOrigin: true, ws: true });
 
@@ -21,18 +23,38 @@ export function createServiceProxy(app: Hono) {
   app.all('*', async (c) => {
     if (c.req.path.startsWith('/api/')) return c.text(`API route not found: ${c.req.path}`, 404);
 
-    const requestedId = c.req.query('__ps_service') || c.req.query('service') || c.req.query('cli') || c.req.query('id');
-    const requestedPort = c.req.query('__ps_port');
     let targetService: ServiceItem | undefined;
 
-    if (requestedId) targetService = services.get(requestedId) || Array.from(services.values()).find((s) => s.name === requestedId);
-    else targetService = Array.from(services.values()).find((s) => s.status === 'running');
+    const host = c.req.header('host');
+    if (host) {
+      targetService = Array.from(services.values()).find((s) => {
+        if (!(s as any).tunnelUrl) return false;
+        try {
+          return new URL((s as any).tunnelUrl).host === host;
+        } catch { return false; }
+      });
+    }
+
+    if (!targetService) {
+      let requestedId = c.req.query('__ps_service') || c.req.query('service') || c.req.query('cli') || c.req.query('id');
+      const requestedPort = c.req.query('__ps_port');
+      
+      if (requestedId) {
+        setCookie(c, 'passerelle_active_service', requestedId, { path: '/', sameSite: 'Lax', secure: true });
+      } else {
+        requestedId = getCookie(c, 'passerelle_active_service') || '';
+      }
+
+      if (requestedId) targetService = services.get(requestedId) || Array.from(services.values()).find((s) => s.name === requestedId);
+      if (!targetService) targetService = Array.from(services.values()).find((s) => s.status === 'running');
+    }
 
     if (!targetService) return c.html(getNoServiceHtml(GATEWAY_WEB_URL));
 
     let localPort = targetService.port;
-    if (requestedPort && targetService.ports && targetService.ports.includes(Number(requestedPort))) {
-      localPort = Number(requestedPort);
+    const reqPortQuery = c.req.query('__ps_port');
+    if (reqPortQuery && targetService.ports && targetService.ports.includes(Number(reqPortQuery))) {
+      localPort = Number(reqPortQuery);
     }
 
     const targetUrl = targetService.type === 'network' && targetService.target ? targetService.target : `http://127.0.0.1:${localPort}`;
@@ -94,10 +116,14 @@ export function setupWsProxy(server: any, proxy: httpProxy) {
       socket.destroy(); return;
     }
 
-    const requestedId = url.searchParams.get('service') || url.searchParams.get('cli') || url.searchParams.get('id');
+    let requestedId = url.searchParams.get('service') || url.searchParams.get('cli') || url.searchParams.get('id');
+    if (!requestedId) {
+      const activeMatch = (req.headers.cookie || '').match(/passerelle_active_service=([^;]+)/);
+      if (activeMatch) requestedId = activeMatch[1];
+    }
     let target: ServiceItem | undefined;
     if (requestedId) target = services.get(requestedId) || Array.from(services.values()).find((s) => s.name === requestedId);
-    else target = Array.from(services.values()).find((s) => s.status === 'running');
+    if (!target) target = Array.from(services.values()).find((s) => s.status === 'running');
 
     if (target) {
       const targetUrl = target.type === 'network' && target.target ? target.target : `http://127.0.0.1:${target.port}`;

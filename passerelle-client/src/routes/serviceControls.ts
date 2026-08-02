@@ -6,7 +6,11 @@ import { assertSafeNetworkTarget } from '../utils/ssrf.js';
 import { buildChildEnv, isCommandAllowed } from '../utils/env.js';
 import { daemonConfig } from '../utils/config.js';
 
-export function setupServiceControlRoutes(app: Hono, onAction: (msg: string) => void, onRender: () => void) {
+import type { DaemonRuntime } from '../daemon/runtime.js';
+
+export function setupServiceControlRoutes(app: Hono, runtime: DaemonRuntime, sendRegistration: () => void) {
+  const onAction = (msg: string) => runtime.setActionMessage(msg);
+  
   app.post('/api/start', async (c) => {
     const body = await c.req.json().catch(() => ({}));
     const serviceId = body.id || body.cli || body.name;
@@ -31,6 +35,12 @@ export function setupServiceControlRoutes(app: Hono, onAction: (msg: string) => 
       }
       target.status = 'running';
       onAction(`[NET] Network service ${target.name} active`);
+      
+      await runtime.tunnelManager.startTunnel(target.id, runtime.port, (url) => {
+        (target as any).tunnelUrl = url;
+        sendRegistration();
+      });
+
       const { process: _p, ...resData } = target;
       return c.json({ success: true, message: `${target.name} (network) is active`, service: resData });
     }
@@ -69,20 +79,31 @@ export function setupServiceControlRoutes(app: Hono, onAction: (msg: string) => 
         appendLogLine(target!.id, `Process error: ${err.message}`);
         target!.status = 'stopped';
         delete target!.process;
-        onRender();
+        runtime.tunnelManager.stopTunnel(target!.id);
+        delete (target as any).tunnelUrl;
+        sendRegistration();
+        runtime.onRender();
       });
 
       child.on('exit', (code) => {
         appendLogLine(target!.id, `Process exited with code ${code}`);
         target!.status = 'stopped';
         delete target!.process;
-        onRender();
+        runtime.tunnelManager.stopTunnel(target!.id);
+        delete (target as any).tunnelUrl;
+        sendRegistration();
+        runtime.onRender();
       });
 
       target.status = 'running';
       target.process = child;
       appendLogLine(target.id, `Process started on port ${target.port}`);
       onAction(`[START] Started ${target.name} on port ${target.port}`);
+
+      await runtime.tunnelManager.startTunnel(target.id, runtime.port, (url) => {
+        (target as any).tunnelUrl = url;
+        sendRegistration();
+      });
 
       const { process: _p, ...resData } = target;
       return c.json({ success: true, message: `${target.name} started successfully`, service: resData });
@@ -104,6 +125,10 @@ export function setupServiceControlRoutes(app: Hono, onAction: (msg: string) => 
 
     if (target.process) { target.process.kill(); delete target.process; }
     target.status = 'stopped';
+    runtime.tunnelManager.stopTunnel(target.id);
+    delete (target as any).tunnelUrl;
+    sendRegistration();
+
     appendLogLine(target.id, 'Process stopped by user request.');
     onAction(`[STOP] Stopped ${target.name}`);
 

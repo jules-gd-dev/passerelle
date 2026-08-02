@@ -50,9 +50,7 @@ export function setupAuthMiddleware(app: Hono, runtime: DaemonRuntime, onAction:
           });
           const url = new URL(c.req.url);
           url.searchParams.delete('code');
-          const newReq = new Request(url.toString(), c.req.raw);
-          c.req.raw = newReq;
-          return next();
+          return c.redirect(url.toString(), 302);
         }
       }
       return c.json({ error: 'Invalid or expired access code' }, 401);
@@ -83,10 +81,7 @@ export function setupAuthMiddleware(app: Hono, runtime: DaemonRuntime, onAction:
           const url = new URL(c.req.url);
           url.searchParams.delete('__ps_token');
           url.searchParams.delete('token');
-          url.searchParams.delete('__ps_service');
-          url.searchParams.delete('__ps_port');
-          const newReq = new Request(url.toString(), c.req.raw);
-          c.req.raw = newReq;
+          return c.redirect(url.toString(), 302);
         }
         return next();
       }

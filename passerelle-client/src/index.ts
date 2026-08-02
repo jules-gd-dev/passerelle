@@ -58,11 +58,7 @@ async function startDaemon() {
   const app = new Hono();
   setupAuthMiddleware(app, runtime, (msg) => runtime.setActionMessage(msg));
   setupVersionRoute(app);
-  setupServiceCrudRoutes(app, (msg) => runtime.setActionMessage(msg));
   setupStatsRoutes(app);
-  setupServiceControlRoutes(app, (msg) => runtime.setActionMessage(msg), () => runtime.onRender());
-  const proxy = createServiceProxy(app);
-
   const sendRegistration = async () => {
     if (!runtime.tunnelUrlStored) return;
     if (!runtime.ws || runtime.ws.readyState !== WebSocket.OPEN) {
@@ -70,18 +66,27 @@ async function startDaemon() {
       for (let i = 0; i < 50; i++) { if (runtime.ws?.readyState === WebSocket.OPEN) break; await new Promise((r) => setTimeout(r, 100)); }
     }
     if (runtime.ws?.readyState === WebSocket.OPEN) {
-      // The daemon owns its identity (machineId + gatewaySecret generated at
-      // install). The gateway binds this pair on first registration and
-      // rejects any future register presenting a different secret.
       const machineId = daemonConfig.machineId || runtime.machineIdStored;
       console.log(`[Daemon] Sending Gateway registration: machineId=${machineId}, tunnelUrl=${runtime.tunnelUrlStored}`);
       runtime.ws.send(JSON.stringify({ action: 'register', machineId, tunnelUrl: runtime.tunnelUrlStored, secret: daemonConfig.gatewaySecret }));
+      
+      const servicesList = Array.from(services.values()).map((s) => ({
+        id: s.id,
+        status: s.status,
+        tunnelUrl: (s as any).tunnelUrl
+      }));
+      runtime.ws.send(JSON.stringify({ action: 'sync_services', services: servicesList }));
+
       if (!runtime.versionChecked) {
         runtime.versionChecked = true;
         void checkAndReportVersion();
       }
     }
   };
+
+  setupServiceCrudRoutes(app, runtime, sendRegistration);
+  setupServiceControlRoutes(app, runtime, sendRegistration);
+  const proxy = createServiceProxy(app);
 
   const cb: KeyActionCallbacks = {
     onKillAllSessions: () => {
@@ -108,9 +113,25 @@ async function startDaemon() {
 
   const onKey = (key: string, fromSocket?: net.Socket) => handleInputKey(key, runtime, cb, fromSocket);
   const ipcServer = setupIpcServer(runtime, onKey);
-  const bouncerServer = serve({ fetch: app.fetch, port, hostname: '127.0.0.1' }, (info) => {
+  const bouncerServer = serve({ fetch: app.fetch, port, hostname: '127.0.0.1' }, async (info) => {
     logInline('(2/4)', `Initializing Hono Bouncer server... Done (listening on 127.0.0.1:${info.port})`);
-    void startCloudflared(runtime, info.port, (url) => connectToGateway(runtime, url, app, sendRegistration, () => setupInteractiveUI(runtime, (k) => onKey(k), () => runtime.onRender())));
+    await runtime.tunnelManager.init();
+    
+    // Start main gateway tunnel
+    void runtime.tunnelManager.startTunnel('gateway', info.port, (url) => {
+      runtime.tunnelUrlStored = url;
+      connectToGateway(runtime, url, app, sendRegistration, () => setupInteractiveUI(runtime, (k) => onKey(k), () => runtime.onRender()));
+    });
+
+    // Restore network tunnels
+    for (const service of services.values()) {
+      if (service.type === 'network' && service.status === 'running') {
+        void runtime.tunnelManager.startTunnel(service.id, info.port, (url) => {
+          (service as any).tunnelUrl = url;
+          if (runtime.tunnelUrlStored) sendRegistration();
+        });
+      }
+    }
   });
 
   setupWsProxy(bouncerServer, proxy);
@@ -124,7 +145,7 @@ async function startDaemon() {
     for (const socket of runtime.attachedSockets) socket.destroy();
     for (const s of services.values()) if (s.process) s.process.kill();
     if (runtime.ws) runtime.ws.close();
-    if (runtime.cloudflaredProcess) runtime.cloudflaredProcess.kill();
+    runtime.tunnelManager.stopAll();
     ipcServer.close();
     bouncerServer.close(() => process.exit(0));
   }

@@ -117,8 +117,14 @@ export function setupWebSocketServer(
             ws,
             tunnelUrl: data.tunnelUrl,
             lastSeen: Date.now(),
+            services: data.services || [],
           });
           ws.send(JSON.stringify({ status: 'registered', id: currentId }));
+        } else if (data.action === 'sync_services') {
+          if (registeredId) {
+            const m = machines.get(registeredId);
+            if (m) m.services = data.services || [];
+          }
         } else if (data.status === 'validated' && data.requestId) {
           const pending = pendingValidations.get(data.requestId);
           if (pending) {
