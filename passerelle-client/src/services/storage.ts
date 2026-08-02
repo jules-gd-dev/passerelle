@@ -16,29 +16,8 @@ export function loadServicesFromFile(): Map<string, ServiceItem> {
     }
   }
 
-  if (!Array.isArray(fileContent) || fileContent.length === 0) {
-    fileContent = [
-      {
-        id: crypto.randomUUID(),
-        name: 'OpenCode',
-        type: 'cli',
-        icon: 'https://raw.githubusercontent.com/walkxcode/dashboard-icons/main/png/opencode.png',
-        command: 'opencode',
-        args: ['serve', '--port', '4000', '--hostname', '127.0.0.1'],
-        port: 4000,
-        status: 'stopped',
-      },
-      {
-        id: crypto.randomUUID(),
-        name: 'Kilo Code',
-        type: 'cli',
-        icon: 'https://raw.githubusercontent.com/walkxcode/dashboard-icons/main/png/vscode.png',
-        command: 'kilo',
-        args: ['serve', '--port', '4001', '--hostname', '127.0.0.1'],
-        port: 4001,
-        status: 'stopped',
-      },
-    ];
+  if (!Array.isArray(fileContent)) {
+    fileContent = [];
   }
 
   let modified = false;
