@@ -67,7 +67,7 @@ export function ServiceCard({ service, currentSession, isBusy, onStart, onStop, 
 
 interface DashboardViewProps {
   currentSession: SessionData;
-  services: ServiceItem[];
+  services: ServiceItem[] | undefined;
   isLoading: boolean;
   serviceActionId: string | null;
   onStart: (serviceId: string) => void;
@@ -81,13 +81,23 @@ interface DashboardViewProps {
 export function DashboardView({ currentSession, services, isLoading, serviceActionId, onStart, onStop, onViewLogs, onEdit, onSettings, onDelete }: DashboardViewProps) {
   const { t } = useTranslation();
 
-  if (isLoading && (!services || services.length === 0)) {
+  if (isLoading && services === undefined) {
     return <div className="loading-text"><IconLoader width={18} height={18} className="spin" /><span>{t('machine.loading_services', { id: currentSession.machineId.slice(0, 8) })}</span></div>;
+  }
+
+  const safeServices = services || [];
+
+  if (safeServices.length === 0) {
+    return (
+      <div style={{ textAlign: 'center', padding: '2rem 1rem', color: 'var(--text-secondary)' }}>
+        {t('services.empty')}
+      </div>
+    );
   }
 
   return (
     <div className="unified-list">
-      {services.map((service) => (
+      {safeServices.map((service) => (
         <ServiceCard key={service.id} service={service} currentSession={currentSession} isBusy={serviceActionId === service.id} onStart={onStart} onStop={onStop} onViewLogs={onViewLogs} onEdit={onEdit} onSettings={onSettings} onDelete={onDelete} />
       ))}
     </div>
