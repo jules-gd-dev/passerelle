@@ -58,7 +58,7 @@ export function ServiceCard({ service, currentSession, isBusy, onStart, onStop, 
               ) : (
                 <>
                   <span>{t('service.open')}</span>
-                  <IconExternalLink width={13} height={13} />
+                  <IconExternalLink width={14} height={14} />
                 </>
               )}
             </a>

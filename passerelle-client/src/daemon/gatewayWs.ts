@@ -28,7 +28,8 @@ export function connectToGateway(
     runtime.reconnectTimer = setTimeout(() => {
       runtime.isReconnecting = false;
       connectToGateway(runtime, runtime.tunnelUrlStored, app, sendRegistration, onRegistered);
-    }, 4000);
+    }, 5000);
+    runtime.onRender();
   };
 
   runtime.ws.on('open', () => {

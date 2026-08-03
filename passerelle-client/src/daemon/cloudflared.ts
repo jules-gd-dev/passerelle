@@ -47,7 +47,16 @@ export class TunnelManager {
     const handleOutput = (data: Buffer) => {
       const output = data.toString();
       if (isDebug) process.stdout.write(`[cloudflared log ${tunnelId}] ${output}`);
+      
       if (!tunnelState.url) {
+        if (output.includes('429 Too Many Requests') || output.includes('1015')) {
+          console.error(`\n[!] CLOUDFLARE RATE LIMIT REACHED for tunnel '${tunnelId}'.`);
+          console.error(`[!] Cloudflare is temporarily blocking your IP because too many tunnels were requested.`);
+          console.error(`[!] Please wait 10-15 minutes before trying again.\n`);
+          this.stopTunnel(tunnelId);
+          return;
+        }
+
         const match = output.match(cloudflareRegex);
         if (match) {
           tunnelState.url = match[0];
@@ -60,6 +69,11 @@ export class TunnelManager {
     cp.stderr?.on('data', handleOutput);
     cp.on('error', (err) => {
       console.error(`[cloudflared ${tunnelId}] Process error:`, err);
+    });
+    cp.on('exit', (code) => {
+      if (code !== 0 && code !== null) {
+        console.error(`\n[!] cloudflared process for tunnel '${tunnelId}' exited unexpectedly with code ${code}.`);
+      }
     });
   }
 
