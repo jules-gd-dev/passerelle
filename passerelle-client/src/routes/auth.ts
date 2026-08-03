@@ -4,6 +4,7 @@ import { cors } from 'hono/cors';
 import { daemonConfig, saveDaemonConfig } from '../utils/config.js';
 import { createJWT, verifyJWT } from '../utils/jwt.js';
 import type { DaemonRuntime } from '../daemon/runtime.js';
+import { getUnauthorizedHtml } from '../proxy/pages.js';
 
 // C3: token lifetimes kept short — no more multi-year credentials.
 const SESSION_MAX_AGE_SEC = 7 * 24 * 3600; // 7 days
@@ -50,12 +51,13 @@ export function setupAuthMiddleware(app: Hono, runtime: DaemonRuntime, onAction:
           });
           const url = new URL(c.req.url);
           url.searchParams.delete('code');
-          const newReq = new Request(url.toString(), c.req.raw);
-          c.req.raw = newReq;
-          return next();
+          return c.redirect(url.toString(), 302);
         }
       }
-      return c.json({ error: 'Invalid or expired access code' }, 401);
+      if (c.req.path.startsWith('/api/')) {
+        return c.json({ error: 'Invalid or expired access code' }, 401);
+      }
+      return c.html(getUnauthorizedHtml(), 401);
     }
 
     const token =
@@ -83,16 +85,16 @@ export function setupAuthMiddleware(app: Hono, runtime: DaemonRuntime, onAction:
           const url = new URL(c.req.url);
           url.searchParams.delete('__ps_token');
           url.searchParams.delete('token');
-          url.searchParams.delete('__ps_service');
-          url.searchParams.delete('__ps_port');
-          const newReq = new Request(url.toString(), c.req.raw);
-          c.req.raw = newReq;
+          return c.redirect(url.toString(), 302);
         }
         return next();
       }
     }
 
-    return c.json({ error: 'Unauthorized' }, 401);
+    if (c.req.path.startsWith('/api/')) {
+      return c.json({ error: 'Unauthorized' }, 401);
+    }
+    return c.html(getUnauthorizedHtml(), 401);
   });
 
   app.post('/api/token', async (c) => {
