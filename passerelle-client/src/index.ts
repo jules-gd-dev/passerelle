@@ -123,13 +123,17 @@ async function startDaemon() {
       connectToGateway(runtime, url, app, sendRegistration, () => setupInteractiveUI(runtime, (k) => onKey(k), () => runtime.onRender()));
     });
 
-    // Restore network tunnels
+    // Restore network tunnels (Staggered to avoid Cloudflare 429 Rate Limit)
+    let delay = 3000;
     for (const service of services.values()) {
       if (service.type === 'network' && service.status === 'running') {
-        void runtime.tunnelManager.startTunnel(service.id, info.port, (url) => {
-          (service as any).tunnelUrl = url;
-          if (runtime.tunnelUrlStored) sendRegistration();
-        });
+        setTimeout(() => {
+          void runtime.tunnelManager.startTunnel(service.id, info.port, (url) => {
+            (service as any).tunnelUrl = url;
+            if (runtime.tunnelUrlStored) sendRegistration();
+          });
+        }, delay);
+        delay += 3000;
       }
     }
   });

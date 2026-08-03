@@ -119,14 +119,12 @@ export function setupServiceCrudRoutes(app: Hono, runtime: DaemonRuntime, sendRe
       try { await assertSafeNetworkTarget(targetService.target); }
       catch (e: any) { return c.json({ error: e.message || 'Invalid target' }, 400); }
     }
-    if (targetService.type === 'network') {
-      targetService.status = 'running';
+    if (targetService.type === 'network' && (targetService.status as string) === 'running') {
       void runtime.tunnelManager.startTunnel(id, runtime.port, (url) => {
         (targetService as any).tunnelUrl = url;
-        sendRegistration();
+        if (runtime.tunnelUrlStored) sendRegistration();
       });
     }
-
     saveServicesToFile(services);
     onAction(`[EDIT] Updated service ${targetService.name}`);
     const { process: _p, ...resData } = targetService;
