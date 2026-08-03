@@ -1,5 +1,5 @@
 import fs from 'node:fs';
-import { spawn } from 'node:child_process';
+import { spawn, type ChildProcess } from 'node:child_process';
 import { bin, install } from 'cloudflared';
 import type { DaemonRuntime } from './runtime.js';
 import { isDebug } from '../utils/config.js';
