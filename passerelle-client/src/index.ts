@@ -5,7 +5,6 @@ import WebSocket from 'ws';
 import { serve } from '@hono/node-server';
 import { Hono } from 'hono';
 import { DaemonRuntime } from './daemon/runtime.js';
-import { startCloudflared } from './daemon/cloudflared.js';
 import { connectToGateway } from './daemon/gatewayWs.js';
 import { setupIpcServer } from './daemon/ipc.js';
 import { setupAuthMiddleware } from './routes/auth.js';

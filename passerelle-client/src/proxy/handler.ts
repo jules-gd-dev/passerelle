@@ -102,7 +102,7 @@ export function createServiceProxy(app: Hono) {
 }
 
 export function setupWsProxy(server: any, proxy: httpProxy) {
-  server.on('upgrade', (req: any, socket: any, head: any) => {
+  server.on('upgrade', async (req: any, socket: any, head: any) => {
     const url = new URL(req.url || '/', 'http://127.0.0.1');
     const queryToken = url.searchParams.get('token');
     const cookieMatch = (req.headers.cookie || '').match(/passerelle_token=([^;]+)/);
@@ -127,9 +127,13 @@ export function setupWsProxy(server: any, proxy: httpProxy) {
 
     if (target) {
       const targetUrl = target.type === 'network' && target.target ? target.target : `http://127.0.0.1:${target.port}`;
-      // M2: re-check network targets before relaying WebSocket traffic.
       if (target.type === 'network' && target.target) {
-        assertSafeNetworkTarget(target.target).catch(() => socket.destroy());
+        try {
+          await assertSafeNetworkTarget(target.target);
+        } catch {
+          socket.destroy();
+          return;
+        }
       }
       proxy.ws(req, socket, head, { target: targetUrl });
     } else {
